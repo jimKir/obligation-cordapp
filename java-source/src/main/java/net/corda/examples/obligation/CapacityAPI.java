@@ -8,7 +8,6 @@ import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.messaging.FlowHandle;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.examples.obligation.flows.IssueCapacity;
-import net.corda.examples.obligation.flows.IssueWork;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -62,8 +61,8 @@ public class CapacityAPI {
     @GET
     @Path("capacities")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<StateAndRef<Work>> obligations() {
-        return rpcOps.vaultQuery(Work.class).getStates();
+    public List<StateAndRef<Capacity>> obligations() {
+        return rpcOps.vaultQuery(Capacity.class).getStates();
     }
 
 
@@ -91,7 +90,7 @@ public class CapacityAPI {
         try {
             final FlowHandle<SignedTransaction> flowHandle = rpcOps.startFlowDynamic(
                     IssueCapacity.Initiator.class,
-                    resourceCount, durationInMonths, grade, issueAmount, null, null, null, lenderIdentity
+                    resourceCount, durationInMonths, grade, issueAmount, lenderIdentity
             );
 
 
@@ -128,7 +127,7 @@ public class CapacityAPI {
         try {
             final FlowHandle<SignedTransaction> flowHandle = rpcOps.startFlowDynamic(
                     IssueCapacity.Initiator.class,
-                    resourceCount, durationInMonths, grade, issueAmount, null, null, null, lenderIdentity
+                    resourceCount, durationInMonths, grade, issueAmount, lenderIdentity
             );
 
 
@@ -165,7 +164,7 @@ public class CapacityAPI {
         try {
             final FlowHandle<SignedTransaction> flowHandle = rpcOps.startFlowDynamic(
                     IssueCapacity.Initiator.class,
-                    null, null, null, null, assetType, totalAssetAmount, null, lenderIdentity
+                    assetType, assetCount, issueAmount, lenderIdentity
             );
 
 

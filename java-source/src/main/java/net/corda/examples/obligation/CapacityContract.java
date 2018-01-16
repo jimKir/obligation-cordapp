@@ -41,11 +41,11 @@ public class CapacityContract implements Contract {
         final CommandWithParties<CapacityContract.Commands> command = requireSingleCommand(tx.getCommands(), CapacityContract.Commands.class);
         final CapacityContract.Commands commandData = command.getValue();
         final Set<PublicKey> setOfSigners = new HashSet<>(command.getSigners());
-        if (commandData instanceof WorkContract.Commands.Issue) {
+        if (commandData instanceof CapacityContract.Commands.Issue) {
             verifyIssue(tx, setOfSigners);
-        } else if (commandData instanceof WorkContract.Commands.Transfer) {
+        } else if (commandData instanceof CapacityContract.Commands.Transfer) {
             //verifyTransfer(tx, setOfSigners);
-        } else if (commandData instanceof WorkContract.Commands.Settle) {
+        } else if (commandData instanceof CapacityContract.Commands.Settle) {
             //verifySettle(tx, setOfSigners);
         } else {
             throw new IllegalArgumentException("Unrecognised command.");
@@ -66,7 +66,7 @@ public class CapacityContract implements Contract {
                     tx.getInputStates().isEmpty());
             req.using("Only one capacity state should be created when issuing an capacity.", tx.getOutputStates().size() == 1);
             Capacity capacity = (Capacity) tx.getOutputStates().get(0);
-            req.using("A newly issued capacity must have a positive amount.", capacity.getTotalResourceAmount().getQuantity() > 0 );
+            //req.using("A newly issued capacity must have a positive amount.", capacity.getTotalResourceAmount().getQuantity() > 0 );
             req.using("The lender and borrower cannot be the same identity.", !capacity.getBorrower().equals(capacity.getLender()));
             req.using("Both lender and borrower together only may sign work issue transaction.",
                     signers.equals(keysFromParticipants(capacity)));

@@ -4,15 +4,14 @@ import co.paralleluniverse.fibers.Suspendable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import net.corda.core.flows.*;
-import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.contracts.Amount;
 import net.corda.core.transactions.TransactionBuilder;
 import net.corda.core.utilities.ProgressTracker;
 import net.corda.examples.obligation.Capacity;
-import net.corda.examples.obligation.Work;
-import net.corda.examples.obligation.WorkContract;
+import net.corda.examples.obligation.CapacityContract;
+
 
 import java.security.PublicKey;
 import java.time.Duration;
@@ -64,19 +63,29 @@ public class IssueCapacity {
         );
 
         public Initiator(Integer resourceCount, Integer durationInMonths, Integer grade, Amount<Currency> totalResourceAmount,
-                         String assetType, Integer assetCount, Amount<Currency> totalAssetAmount, Party lender) {
+                         Party lender) {
             this.resourceCount = resourceCount;
             this.durationInMonths = durationInMonths;
             this.grade = grade;
             this.totalResourceAmount = totalResourceAmount;
 
-            this.assetType = assetType;
-            this.assetCount = assetCount;
-            this.totalAssetAmount = totalAssetAmount;
+            this.totalAssetAmount = null;
 
             this.lender = lender;
 
         }
+
+        public Initiator(String assetType, Integer assetCount, Amount<Currency> totalAssetAmount, Party lender) {
+            this.assetType = assetType;
+            this.assetCount = assetCount;
+            this.totalAssetAmount = totalAssetAmount;
+
+            this.totalResourceAmount = null;
+
+            this.lender = lender;
+
+        }
+
 
         @Override
         public ProgressTracker getProgressTracker() {
@@ -106,8 +115,8 @@ public class IssueCapacity {
             final List<PublicKey> requiredSigners = capacity.getParticipantKeys();
 
             final TransactionBuilder utx = new TransactionBuilder(getFirstNotary())
-                    .addOutputState(capacity, WorkContract.WORK_CONTRACT_ID)
-                    .addCommand(new WorkContract.Commands.Issue(), requiredSigners)
+                    .addOutputState(capacity, CapacityContract.CAPACITY_CONTRACT_ID)
+                    .addCommand(new CapacityContract.Commands.Issue(), requiredSigners)
                     .setTimeWindow(getServiceHub().getClock().instant(), Duration.ofSeconds(30));
 
             // Step 3. Sign the transaction.
