@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>IOU v2 CorDapp</title>
+    <title>Team 3 - CH - Corda - IT Budgeting</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
@@ -31,8 +31,10 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">{{demoApp.thisNode}}</a>
         </div>
-        <button ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">Create IOU</button>
-        <button ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue cash</button>
+
+        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">Create Work</button>
+
+        <button  ng-if="!demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue Budget</button>
         <button ng-click="demoApp.refresh()" type="button" class="btn btn-default navbar-btn"><span
                 class="glyphicon glyphicon-refresh"></span></button>
     </div>
@@ -44,7 +46,7 @@
 
 <script type="text/ng-template" id="createIOUModal.html">
     <div class="modal-header">
-        <h4 class="modal-title">Add new IOU</h4>
+        <h4 class="modal-title">Create new IOU some Work request</h4>
     </div>
     <form>
         <div class="modal-body">
@@ -55,12 +57,16 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="createIOUCurrency" class="control-label">Currency (ISO code):</label>
-                <input type="text" ng-model="createIOUModal.form.currency" class="form-control" id="createIOUCurrency">
+                <label for="createWorkFeatureTitle" class="control-label">Feature Title</label>
+                <input type="text" ng-model="createIOUModal.form.featureTitle" class="form-control" id="createWorkFeatureTitle">
             </div>
             <div class="form-group">
-                <label for="createIOUAmount" class="control-label">Amount (Int):</label>
-                <input type="text" ng-model="createIOUModal.form.amount" class="form-control" id="createIOUAmount">
+                <label for="createWorkDescription" class="control-label">Feature Description</label>
+                <input type="text" ng-model="createIOUModal.form.description" class="form-control" id="createWorkDescription">
+            </div>
+            <div class="form-group">
+                <label for="createIOUAmount" class="control-label">Budget (Int):</label>
+                <input type="text" ng-model="createIOUModal.form.amount" class="form-control" id="createIOUAmount"> CHF
             </div>
             <div ng-show="createIOUModal.formError" class="form-group">
                 <div class="alert alert-danger" role="alert">
