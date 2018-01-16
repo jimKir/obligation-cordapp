@@ -24,13 +24,12 @@ public class IssueWork {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class Initiator extends ObligationBaseFlow {
+    public static class Initiator extends FlowLogic<SignedTransaction> {
 
         private final Amount<Currency> amount;
         private final Party lender;
         private String featureTitle;
         private String description;
-        //private final Boolean anonymous;
 
         private final ProgressTracker.Step INITIALISING = new ProgressTracker.Step("Performing initial steps.");
         private final ProgressTracker.Step BUILDING = new ProgressTracker.Step("Performing initial steps.");
@@ -63,7 +62,6 @@ public class IssueWork {
             return progressTracker;
         }
 
-
         @Suspendable
         private Work createWork() throws FlowException {
             return new Work(featureTitle, description, amount, lender, getOurIdentity());
@@ -72,6 +70,7 @@ public class IssueWork {
         @Suspendable
         @Override
         public SignedTransaction call() throws FlowException {
+
             // Step 1. Initialisation.
             progressTracker.setCurrentStep(INITIALISING);
             final Work work = createWork();
@@ -105,7 +104,35 @@ public class IssueWork {
             return subFlow(new FinalityFlow(stx, FINALISING.childProgressTracker()));
 
         }
+
+        Party getFirstNotary() throws FlowException {
+            List<Party> notaries = getServiceHub().getNetworkMapCache().getNotaryIdentities();
+            if (notaries.isEmpty()) {
+                throw new FlowException("No available notary.");
+            }
+            return notaries.get(0);
+        }
+
+
     }
 
+    @InitiatedBy(IssueWork.Initiator.class)
+    public static class Responder extends FlowLogic<SignedTransaction> {
+        private final FlowSession otherFlow;
+
+        public Responder(FlowSession otherFlow) {
+            this.otherFlow = otherFlow;
+        }
+
+        @Suspendable
+        @Override
+        public SignedTransaction call() throws FlowException {
+            final SignedTransaction stx = subFlow(new ObligationBaseFlow.SignTxFlowNoChecking(otherFlow, SignTransactionFlow.Companion.tracker()));
+            return waitForLedgerCommit(stx.getId());
+        }
+    }
 
 }
+
+
+

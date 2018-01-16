@@ -2,7 +2,7 @@ package net.corda.examples.obligation;
 
 import com.google.common.collect.ImmutableList;
 import net.corda.core.contracts.Amount;
-import net.corda.core.contracts.LinearState;
+import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.AbstractParty;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Created by pai on 16.01.18.
  */
-public class Work implements LinearState {
+public class Work implements ContractState {
 
 
     private final UniqueIdentifier linearId;
@@ -65,11 +65,6 @@ public class Work implements LinearState {
         return borrower;
     }
 
-    @NotNull
-    @Override
-    public UniqueIdentifier getLinearId() {
-        return linearId;
-    }
 
     @NotNull
     @Override

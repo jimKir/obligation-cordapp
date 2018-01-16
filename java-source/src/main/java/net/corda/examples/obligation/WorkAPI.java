@@ -7,7 +7,6 @@ import net.corda.core.identity.Party;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.messaging.FlowHandle;
 import net.corda.core.transactions.SignedTransaction;
-import net.corda.examples.obligation.flows.IssueObligation;
 import net.corda.examples.obligation.flows.IssueWork;
 
 import javax.ws.rs.GET;

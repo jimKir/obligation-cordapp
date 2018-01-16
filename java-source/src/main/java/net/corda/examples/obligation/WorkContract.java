@@ -41,7 +41,7 @@ public class WorkContract implements Contract{
 
     @Override
     public void verify(LedgerTransaction tx) throws IllegalArgumentException {
-        final CommandWithParties<WorkContract.Commands> command = requireSingleCommand(tx.getCommands(), WorkContract.Commands.class);
+        final CommandWithParties<Commands> command = requireSingleCommand(tx.getCommands(), WorkContract.Commands.class);
         final WorkContract.Commands commandData = command.getValue();
         final Set<PublicKey> setOfSigners = new HashSet<>(command.getSigners());
         if (commandData instanceof WorkContract.Commands.Issue) {
