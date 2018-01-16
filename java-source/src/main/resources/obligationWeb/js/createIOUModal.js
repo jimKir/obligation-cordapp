@@ -4,6 +4,7 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
     const createIOUModal = this;
 
     createIOUModal.peers = peers;
+    createIOUModal.providers = peers.filter(peer => peer.includes('Provider'));
     createIOUModal.form = {};
     createIOUModal.formError = false;
 
@@ -15,7 +16,8 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
             createIOUModal.formError = false;
 
             const amount = createIOUModal.form.amount;
-            const currency = createIOUModal.form.currency;
+            const featureTitle = createIOUModal.form.featureTitle;
+            const description = createIOUModal.form.description;
             const party = createIOUModal.form.counterparty;
 
             $uibModalInstance.close();
@@ -23,7 +25,7 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
             // We define the IOU creation endpoint.
             const issueIOUEndpoint =
                 apiBaseURL +
-                `issue-obligation?amount=${amount}&currency=${currency}&party=${party}`;
+                `issue-obligation?amount=${amount}&featureTitle=${featureTitle}&party=${party}&description=${description}`;
 
             // We hit the endpoint to create the IOU and handle success/failure responses.
             $http.get(issueIOUEndpoint).then(
