@@ -1,7 +1,7 @@
 "use strict";
 
 // Define your backend here.
-angular.module('demoAppModule', ['ui.bootstrap']).controller('DemoAppCtrl', function($http, $location, $uibModal) {
+angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('DemoAppCtrl', function($http, $location, $uibModal, $scope) {
     const demoApp = this;
 
     const apiBaseURL = "/api/obligation/";
@@ -90,6 +90,50 @@ angular.module('demoAppModule', ['ui.bootstrap']).controller('DemoAppCtrl', func
     }
 
     demoApp.refresh();
+
+    // Pie Chart - Mock data
+    $scope.chartConfig = {
+      chart: {
+        type: 'pie'
+      },
+      tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      plotOptions: {
+          pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                  enabled: false
+              },
+              showInLegend: true
+          }
+      },
+      series: [{
+        name: 'Budget',
+        data: [
+        {
+            name: 'salaries',
+            y: 55,
+            color: '#E94B3B'
+        }, {
+            name: 'location',
+            y: 30,
+            color: '#8AD5E7',
+             sliced: true,
+             selected: true
+        }, {
+            name: 'equipment',
+            color: '#F8C471',
+            y: 15
+        }
+        ],
+        id: 'series1'
+      }],
+      title: {
+        text: 'Budget'
+      }
+    }
 });
 
 // Causes the webapp to ignore unhandled modal dismissals.
