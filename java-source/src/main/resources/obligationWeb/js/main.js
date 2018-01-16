@@ -27,6 +27,12 @@ angular.module('demoAppModule', ['ui.bootstrap']).controller('DemoAppCtrl', func
         createIOUModal.result.then(() => {}, () => {});
     };
 
+    demoApp.isProvider = (typeText) => {
+        console.log(typeText);
+        console.log(typeText.includes('Sponsor'));
+        return typeText.includes('Sponsor');
+    }
+
     /** Displays the cash issuance modal. */
     demoApp.openIssueCashModal = () => {
         const issueCashModal = $uibModal.open({
