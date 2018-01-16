@@ -68,7 +68,7 @@ angular.module('demoAppModule').controller('CreateWorkModalCtrl', function($http
     const createWorkModal = this;
 
     createWorkModal.peers = peers;
-    createWorkModal.providers = peers.filter(peer => peer.includes('Provider'));
+    createWorkModal.sposnsors = peers.filter(peer => peer.includes('Sponsor'));
     createWorkModal.form = {};
     createWorkModal.formError = false;
 
