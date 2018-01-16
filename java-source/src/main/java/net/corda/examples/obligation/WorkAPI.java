@@ -59,8 +59,8 @@ public class WorkAPI {
     @GET
     @Path("works")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<StateAndRef<Obligation>> obligations() {
-        return rpcOps.vaultQuery(Obligation.class).getStates();
+    public List<StateAndRef<Work>> obligations() {
+        return rpcOps.vaultQuery(Work.class).getStates();
     }
 
     @GET
