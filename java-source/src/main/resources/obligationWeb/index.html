@@ -30,9 +30,8 @@
             <a class="navbar-brand" href="#">{{demoApp.thisNode}}</a>
         </div>
 
-        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">Create Work</button>
-
-        <button  ng-if="!demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue Budget</button>
+        <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">OfFer Budget for Work</button>
+        <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-if="!demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue Budget</button>
         <button ng-click="demoApp.refresh()" type="button" class="btn btn-default navbar-btn"><span
                 class="glyphicon glyphicon-refresh"></span></button>
     </div>
@@ -40,14 +39,14 @@
 
 <script type="text/ng-template" id="createIOUModal.html">
     <div class="modal-header">
-        <h4 class="modal-title">Create new IOU some Work request</h4>
+        <h4 class="modal-title">Offer budget to Solution Provider</h4>
     </div>
     <form>
         <div class="modal-body">
             <div class="form-group">
                 <label for="createIOUCounterparty" class="control-label">Counter-party:</label>
                 <select ng-model="createIOUModal.form.counterparty" class="form-control" id="createIOUCounterparty"
-                        ng-options="peer as peer for peer in createIOUModal.peers">
+                        ng-options="peer as peer for peer in createIOUModal.providers">
                 </select>
             </div>
             <div class="form-group">
@@ -59,20 +58,20 @@
                 <input type="text" ng-model="createIOUModal.form.description" class="form-control" id="createWorkDescription">
             </div>
             <div class="form-group">
-                <label for="createIOUAmount" class="control-label">Budget (Int):</label>
-                <input type="text" ng-model="createIOUModal.form.amount" class="form-control" id="createIOUAmount"> CHF
+                <label for="createIOUAmount" class="control-label">Budget:</label>
+                <input type="text" ng-model="createIOUModal.form.amount" class="form-control" id="createIOUAmount">
             </div>
             <div ng-show="createIOUModal.formError" class="form-group">
                 <div class="alert alert-danger" role="alert">
                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                     <span class="sr-only">Error:</span>
-                    Enter valid IOU creation parameters
+                    Enter valid Budget offer parameters
                 </div>
             </div>
         </div>
         <div class="modal-footer">
             <button ng-click="createIOUModal.cancel()" type="button" class="btn btn-default">Close</button>
-            <button ng-click="createIOUModal.create()" type="button" class="btn btn-primary">Create IOU</button>
+            <button ng-click="createIOUModal.create()" type="button" class="btn btn-primary">Offer Budget</button>
         </div>
     </form>
 </script>
@@ -217,7 +216,7 @@
     <div class="col-md-10">
         <div ng-show="!demoApp.ious.length" class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">There are no recorded IOUs</h3>
+                <h3 class="panel-title">There are no Pending Budget offers</h3>
             </div>
             <div class="panel-body">Use the "Create IOU" button to send an IOU to a peer.</div>
         </div>

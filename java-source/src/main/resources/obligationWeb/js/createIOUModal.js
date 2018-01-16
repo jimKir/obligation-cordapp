@@ -4,6 +4,7 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
     const createIOUModal = this;
 
     createIOUModal.peers = peers;
+    createIOUModal.providers = peers.filter(peer => peer.includes('Provider'));
     createIOUModal.form = {};
     createIOUModal.formError = false;
 

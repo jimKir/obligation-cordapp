@@ -27,7 +27,7 @@ angular.module('demoAppModule', ['ui.bootstrap']).controller('DemoAppCtrl', func
         createIOUModal.result.then(() => {}, () => {});
     };
 
-    demoApp.isProvider = (typeText) => {
+    demoApp.isSponsor = (typeText) => {
         console.log(typeText);
         console.log(typeText.includes('Sponsor'));
         return typeText.includes('Sponsor');
