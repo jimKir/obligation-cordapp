@@ -96,7 +96,21 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
       chart: {
         type: 'pie'
       },
+      tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      plotOptions: {
+          pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                  enabled: false
+              },
+              showInLegend: true
+          }
+      },
       series: [{
+        name: 'Budget',
         data: [
         {
             name: 'salaries',
@@ -105,7 +119,9 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
         }, {
             name: 'location',
             y: 30,
-            color: '#8AD5E7'
+            color: '#8AD5E7',
+             sliced: true,
+             selected: true
         }, {
             name: 'equipment',
             color: '#F8C471',
