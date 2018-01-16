@@ -34,6 +34,8 @@
 
         <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">OfFer Budget for Work</button>
         <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-if="!demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue Budget</button>
+        <button ng-if="!demoApp.isSponsor(demoApp.thisNode)"  ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Create work</button>
+
         <button ng-click="demoApp.refresh()" type="button" class="btn btn-default navbar-btn"><span
                 class="glyphicon glyphicon-refresh"></span></button>
     </div>
@@ -56,12 +58,12 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="createWorkFeatureTitle" class="control-label">Feature Title</label>
-                <input type="text" ng-model="createIOUModal.form.featureTitle" class="form-control" id="createWorkFeatureTitle">
+                <label for="createBgtFeatureTitle" class="control-label">Feature Title</label>
+                <input type="text" ng-model="createIOUModal.form.featureTitle" class="form-control" id="createBgtFeatureTitle">
             </div>
             <div class="form-group">
-                <label for="createWorkDescription" class="control-label">Feature Description</label>
-                <input type="text" ng-model="createIOUModal.form.description" class="form-control" id="createWorkDescription">
+                <label for="createBgtDescription" class="control-label">Feature Description</label>
+                <input type="text" ng-model="createIOUModal.form.description" class="form-control" id="createBgtDescription">
             </div>
             <div class="form-group">
                 <label for="createIOUAmount" class="control-label">Budget:</label>
@@ -78,6 +80,46 @@
         <div class="modal-footer">
             <button ng-click="createIOUModal.cancel()" type="button" class="btn btn-default">Close</button>
             <button ng-click="createIOUModal.create()" type="button" class="btn btn-primary">Offer Budget</button>
+        </div>
+    </form>
+</script>
+
+
+<script type="text/ng-template" id="createWorkModal.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Offer work to Sponsor</h4>
+    </div>
+    <form>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="createWorkCounterparty" class="control-label">Counter-party:</label>
+                <select ng-model="createWorkModal.form.counterparty" class="form-control" id="createWorkCounterparty"
+                        ng-options="peer as peer for peer in createWorkModal.providers">
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="createWorkFeatureTitle" class="control-label">Feature Title</label>
+                <input type="text" ng-model="createWorkModal.form.featureTitle" class="form-control" id="createWorkFeatureTitle">
+            </div>
+            <div class="form-group">
+                <label for="createWorkDescription" class="control-label">Feature Description</label>
+                <input type="text" ng-model="createWorkModal.form.description" class="form-control" id="createWorkDescription">
+            </div>
+            <div class="form-group">
+                <label for="createWorkAmount" class="control-label">Budget:</label>
+                <input type="text" ng-model="createWorkModal.form.amount" class="form-control" id="createWorkAmount">
+            </div>
+            <div ng-show="createWorkModal.formError" class="form-group">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Enter valid Budget offer parameters
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button ng-click="createWorkModal.cancel()" type="button" class="btn btn-default">Close</button>
+            <button ng-click="createWorkModal.create()" type="button" class="btn btn-primary">Offer Budget</button>
         </div>
     </form>
 </script>

@@ -71,6 +71,8 @@ public class IssueWork {
         @Override
         public SignedTransaction call() throws FlowException {
 
+            System.out.println("Here we enter");
+
             // Step 1. Initialisation.
             progressTracker.setCurrentStep(INITIALISING);
             final Work work = createWork();

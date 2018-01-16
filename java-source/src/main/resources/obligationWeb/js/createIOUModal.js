@@ -59,8 +59,78 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
     }
 });
 
+
+
+
+
+
+angular.module('demoAppModule').controller('CreateWorkModalCtrl', function($http, $uibModalInstance, $uibModal, apiBaseURL, peers) {
+    const createWorkModal = this;
+
+    createWorkModal.peers = peers;
+    createWorkModal.providers = peers.filter(peer => peer.includes('Provider'));
+    createWorkModal.form = {};
+    createWorkModal.formError = false;
+
+    /** Validate and create an Work. */
+    createWorkModal.create = () => {
+        if (invalidFormInput()) {
+            createWorkModal.formError = true;
+        } else {
+            createWorkModal.formError = false;
+
+            const amount = createWorkModal.form.amount;
+            const featureTitle = createWorkModal.form.featureTitle;
+            const description = createWorkModal.form.description;
+            const party = createWorkModal.form.counterparty;
+
+            $uibModalInstance.close();
+
+            // We define the Work creation endpoint.
+            const issueIOUEndpoint =
+                apiBaseURL +
+                `issue-work?amount=${amount}&featureTitle=${featureTitle}&party=${party}&description=${description}`;
+            // We hit the endpoint to create the IOU and handle success/failure responses.
+            $http.get(issueIOUEndpoint).then(
+                (result) => createWorkModal.displayMessage(result),
+                (result) => createWorkModal.displayMessage(result)
+            );
+        }
+    };
+
+    /** Displays the success/failure response from attempting to create an IOU. */
+    createWorkModal.displayMessage = (message) => {
+        const createWorkMsgModal = $uibModal.open({
+            templateUrl: 'createWorkMsgModal.html',
+            controller: 'createWorkMsgModalCtrl',
+            controllerAs: 'createWorkMsgModal',
+            resolve: {
+                message: () => message
+            }
+        });
+
+        // No behaviour on close / dismiss.
+        createWorkMsgModal.result.then(() => {}, () => {});
+    };
+
+    /** Closes the Work creation modal. */
+    createWorkModal.cancel = () => $uibModalInstance.dismiss();
+
+    // Validates the Work.
+    function invalidFormInput() {
+        return isNaN(createWorkModal.form.amount) || (createWorkModal.form.counterparty === undefined);
+    }
+});
+
 // Controller for the success/fail modal.
 angular.module('demoAppModule').controller('createIOUMsgModalCtrl', function($uibModalInstance, message) {
     const createIOUMsgModal = this;
     createIOUMsgModal.message = message.data;
+});
+
+
+// Controller for the success/fail modal.
+angular.module('demoAppModule').controller('createWorkMsgModalCtrl', function($uibModalInstance, message) {
+    const createWorkMsgModal = this;
+    createWorkMsgModal.message = message.data;
 });
