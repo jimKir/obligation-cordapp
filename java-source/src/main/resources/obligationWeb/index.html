@@ -16,6 +16,8 @@
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.1/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.src.js"></script>
+    <script src="https://rawgithub.com/pablojim/highcharts-ng/master/src/highcharts-ng.js"></script>
     <script src="js/main.js"></script>
     <script src="js/createIOUModal.js"></script>
     <script src="js/issueCashModal.js"></script>
@@ -33,6 +35,10 @@
         <button ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue cash</button>
         <button ng-click="demoApp.refresh()" type="button" class="btn btn-default navbar-btn"><span
                 class="glyphicon glyphicon-refresh"></span></button>
+    </div>
+
+    <div class="row">
+        <highchart id="chart1" config="chartConfig" class="span10" disable-change-detection="false"></highchart>
     </div>
 </nav>
 
