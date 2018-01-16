@@ -85,7 +85,7 @@ angular.module('demoAppModule').controller('CreateWorkModalCtrl', function($http
             const party = createWorkModal.form.counterparty;
 
             $uibModalInstance.close();
-
+    apiBaseURL = apiBaseURL.replace('obligation','work')
             // We define the Work creation endpoint.
             const issueIOUEndpoint =
                 apiBaseURL +
