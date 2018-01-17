@@ -26,6 +26,8 @@ public class IssueObligation {
     @InitiatingFlow
     @StartableByRPC
     public static class Initiator extends ObligationBaseFlow {
+        private final String featureTitle;
+        private final String description;
         private final Amount<Currency> amount;
         private final Party lender;
         private final Boolean anonymous;
@@ -52,7 +54,20 @@ public class IssueObligation {
             this.amount = amount;
             this.lender = lender;
             this.anonymous = anonymous;
+            this.featureTitle = null;
+            this.description = null;
+
+
         }
+
+        public Initiator(String featureTitle, String description, Amount<Currency> amount, Party lender, Boolean anonymous) {
+            this.featureTitle = featureTitle;
+            this.description = description;
+            this.amount = amount;
+            this.lender = lender;
+            this.anonymous = anonymous;
+        }
+
 
         @Override
         public ProgressTracker getProgressTracker() {
@@ -111,9 +126,11 @@ public class IssueObligation {
                 final AnonymousParty anonymousMe = txKeys.get(getOurIdentity());
                 final AnonymousParty anonymousLender = txKeys.get(lender);
 
-                return new Obligation(amount, anonymousLender, anonymousMe);
+                // return new Obligation(amount, anonymousLender, anonymousMe);
+                return new Obligation(featureTitle, description, amount, anonymousLender, anonymousMe);
             } else {
-                return new Obligation(amount, lender, getOurIdentity());
+                //return new Obligation(amount, lender, getOurIdentity());
+                return new Obligation(featureTitle, description, amount, lender, getOurIdentity());
             }
         }
     }

@@ -17,11 +17,16 @@ import java.util.stream.Collectors;
 import static net.corda.core.utilities.EncodingUtils.toBase58String;
 
 public class Obligation implements LinearState {
+    private final String featureTitle;
+    private final String description;
     private final Amount<Currency> amount;
     private final AbstractParty lender;
     private final AbstractParty borrower;
     private final Amount<Currency> paid;
     private final UniqueIdentifier linearId;
+
+
+
 
     public Obligation(Amount<Currency> amount, AbstractParty lender, AbstractParty borrower, Amount<Currency> paid, UniqueIdentifier linearId) {
         this.amount = amount;
@@ -29,6 +34,10 @@ public class Obligation implements LinearState {
         this.borrower = borrower;
         this.paid = paid;
         this.linearId = linearId;
+
+        this.featureTitle = null;
+        this.description = null;
+
     }
 
     public Obligation(Amount<Currency> amount, AbstractParty lender, AbstractParty borrower, Amount<Currency> paid) {
@@ -37,6 +46,10 @@ public class Obligation implements LinearState {
         this.borrower = borrower;
         this.paid = paid;
         this.linearId = new UniqueIdentifier();
+
+        this.featureTitle = null;
+        this.description = null;
+
     }
 
     public Obligation(Amount<Currency> amount, AbstractParty lender, AbstractParty borrower) {
@@ -45,6 +58,51 @@ public class Obligation implements LinearState {
         this.borrower = borrower;
         this.paid = new Amount<>(0, amount.getToken());
         this.linearId = new UniqueIdentifier();
+
+        this.featureTitle = null;
+        this.description = null;
+
+    }
+
+    public Obligation(String featureTitle, String description, Amount<Currency> amount, AbstractParty lender, AbstractParty borrower, Amount<Currency> paid, UniqueIdentifier linearId) {
+        this.amount = amount;
+        this.lender = lender;
+        this.borrower = borrower;
+        this.paid = paid;
+        this.linearId = linearId;
+        this.featureTitle = featureTitle;
+        this.description = description;
+    }
+
+    public Obligation(String featureTitle, String description, Amount<Currency> amount, AbstractParty lender, AbstractParty borrower, Amount<Currency> paid) {
+        this.amount = amount;
+        this.lender = lender;
+        this.borrower = borrower;
+        this.paid = paid;
+        this.linearId = new UniqueIdentifier();
+        this.featureTitle = featureTitle;
+        this.description = description;
+
+    }
+
+    public Obligation(String featureTitle, String description, Amount<Currency> amount, AbstractParty lender, AbstractParty borrower) {
+        this.amount = amount;
+        this.lender = lender;
+        this.borrower = borrower;
+        this.paid = new Amount<>(0, amount.getToken());
+        this.linearId = new UniqueIdentifier();
+        this.featureTitle = featureTitle;
+        this.description = description;
+
+    }
+
+
+    public String getFeatureTitle() {
+        return featureTitle;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Amount<Currency> getAmount() {
@@ -62,6 +120,8 @@ public class Obligation implements LinearState {
     public Amount<Currency> getPaid() {
         return paid;
     }
+
+
 
     @Override
     public UniqueIdentifier getLinearId() {
