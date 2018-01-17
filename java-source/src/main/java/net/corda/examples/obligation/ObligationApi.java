@@ -124,6 +124,7 @@ public class ObligationApi {
     @GET
     @Path("issue-obligation")
     public Response issueObligation(
+            @QueryParam(value = "linkingId") String linkingId,
             @QueryParam(value = "featureTitle") String featureTitle,
             @QueryParam(value = "description") String description,
             @QueryParam(value = "amount") int amount,
@@ -145,7 +146,7 @@ public class ObligationApi {
         try {
             final FlowHandle<SignedTransaction> flowHandle = rpcOps.startFlowDynamic(
                     IssueObligation.Initiator.class,
-                    featureTitle, description, issueAmount, lenderIdentity, false
+                    linkingId, featureTitle, description, issueAmount, lenderIdentity, false
             );
 
             final SignedTransaction result = flowHandle.getReturnValue().get();

@@ -4,6 +4,7 @@ import co.paralleluniverse.fibers.Suspendable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import net.corda.core.contracts.Amount;
+import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
@@ -30,6 +31,7 @@ public class IssueWork {
         private final Party lender;
         private String featureTitle;
         private String description;
+        private UniqueIdentifier linearId;
 
         private final ProgressTracker.Step INITIALISING = new ProgressTracker.Step("Performing initial steps.");
         private final ProgressTracker.Step BUILDING = new ProgressTracker.Step("Performing initial steps.");
@@ -54,6 +56,7 @@ public class IssueWork {
             this.lender = lender;
             this.featureTitle = featureTitle;
             this.description = description;
+            this.linearId =  new UniqueIdentifier();
 
         }
 
@@ -64,7 +67,7 @@ public class IssueWork {
 
         @Suspendable
         private Work createWork() throws FlowException {
-            return new Work(featureTitle, description, amount, lender, getOurIdentity());
+            return new Work(linearId, featureTitle, description, amount, lender, getOurIdentity());
         }
 
         @Suspendable

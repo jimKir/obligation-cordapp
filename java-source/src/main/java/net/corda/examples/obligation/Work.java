@@ -65,6 +65,10 @@ public class Work implements ContractState {
         return borrower;
     }
 
+    public UniqueIdentifier getLinearId() {
+        return linearId;
+    }
+
 
     @NotNull
     @Override

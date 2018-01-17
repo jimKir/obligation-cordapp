@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import net.corda.confidential.SwapIdentitiesFlow;
 import net.corda.core.contracts.Amount;
+import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.AnonymousParty;
 import net.corda.core.identity.Party;
@@ -21,11 +22,13 @@ import java.time.Duration;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class IssueObligation {
     @InitiatingFlow
     @StartableByRPC
     public static class Initiator extends ObligationBaseFlow {
+        private final String linkingId;
         private final String featureTitle;
         private final String description;
         private final Amount<Currency> amount;
@@ -56,11 +59,13 @@ public class IssueObligation {
             this.anonymous = anonymous;
             this.featureTitle = null;
             this.description = null;
+            this.linkingId = null;
 
 
         }
 
-        public Initiator(String featureTitle, String description, Amount<Currency> amount, Party lender, Boolean anonymous) {
+        public Initiator(String linkingId, String featureTitle, String description, Amount<Currency> amount, Party lender, Boolean anonymous) {
+            this.linkingId = linkingId;
             this.featureTitle = featureTitle;
             this.description = description;
             this.amount = amount;
@@ -112,6 +117,7 @@ public class IssueObligation {
 
         @Suspendable
         private Obligation createObligation() throws FlowException {
+            UniqueIdentifier linkId =  new UniqueIdentifier("", UUID.fromString(linkingId));
             if (anonymous) {
                 final HashMap<Party, AnonymousParty> txKeys = subFlow(new SwapIdentitiesFlow(lender));
 
@@ -127,10 +133,12 @@ public class IssueObligation {
                 final AnonymousParty anonymousLender = txKeys.get(lender);
 
                 // return new Obligation(amount, anonymousLender, anonymousMe);
-                return new Obligation(featureTitle, description, amount, anonymousLender, anonymousMe);
+
+
+                return new Obligation(linkId, featureTitle, description, amount, anonymousLender, anonymousMe);
             } else {
                 //return new Obligation(amount, lender, getOurIdentity());
-                return new Obligation(featureTitle, description, amount, lender, getOurIdentity());
+                return new Obligation(linkId, featureTitle, description, amount, lender, getOurIdentity());
             }
         }
     }
