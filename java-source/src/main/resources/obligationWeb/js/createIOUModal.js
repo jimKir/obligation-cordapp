@@ -216,7 +216,6 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
         console.log('inside getworkdata');
         for(let i = 0; i < worksforSelectedProvider.length; i++) {
             if(worksforSelectedProvider[i].state.data.featureTitle === createIOUModal.form.selectedWork) {
-                console.log('||>>> YES!');
                 createIOUModal.form.amount = worksforSelectedProvider[i].state.data.amount.replace(' CHF', '');
                 createIOUModal.form.description = worksforSelectedProvider[i].state.data.description;
                 createIOUModal.form.featureTitle = createIOUModal.form.selectedWork;

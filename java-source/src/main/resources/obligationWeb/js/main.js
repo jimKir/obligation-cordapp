@@ -185,10 +185,11 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
         $http.get(apiBaseURL + "cash-balances").then((response) => demoApp.cashBalances =
             response.data);
 
+        console.log('>>>>>>>>>> CASH BALANCES:' + demoApp.cashBalances);
         // Update list of cash issues.
         $http.get(apiBaseURL + "cash").then((response) => demoApp.cash =
             response.data);
-        if(demoApp.cash) {
+        /*if(demoApp.cash) {
             let issuedBudgetList = [];
             let totalAmount = 0;
             for(let i = 0; i < demoApp.cash.length; i++) {
@@ -202,10 +203,64 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
                   data: issuedBudgetList
               }];
             });
+        }*/
+        if(demoApp.cashBalances) {
+            let tempCashBalance = demoApp.cashBalances.CHF.split(' ').shift();
+            if(tempCashBalance === '1000000' || tempCashBalance === '1000000.00') {
+                // PIE
+                $timeout(() => {
+                  $scope.pieConfig.series = [ {
+                     name: 'Budget allocation',
+                     data: [
+                     {
+                         name: 'budget',
+                         y: 1000000,
+                         color: '#8AD5E7'
+                     }
+                     ],
+                     id: 'pie-config'
+                    }];
+                });
+
+                // LINE
+                $timeout(() => {
+                  $scope.graphConfig.series = [{
+                      name: 'Issued budget',
+                      data: [0, 1000000]
+                  }];
+                });
+            } else if(tempCashBalance === '500000' || tempCashBalance === '500000.00'){
+                // PIE
+                $timeout(() => {
+                  $scope.pieConfig.series = [ {
+                     name: 'Budget allocation',
+                     data: [
+                     {
+                         name: 'feature',
+                         y: 500000,
+                         color: '#E94B3B'
+                     },
+                     {
+                          name: 'budget',
+                          y: 500000,
+                          color: '#8AD5E7'
+                     }],
+                     id: 'pie-config'
+                    }];
+                });
+
+                // LINE
+                $timeout(() => {
+                  $scope.graphConfig.series = [{
+                      name: 'Issued budget',
+                      data: [0, 1000000, 500000]
+                  }];
+                });
+            }
         }
     }, 2000);
 
-    // Highcharts Pie Chart - Mock data
+    // Highcharts Pie Chart
     $scope.pieConfig = {
       chart: {
         type: 'pie'
@@ -225,19 +280,7 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
       },
       series: [{
         name: 'Budget allocation',
-        data: [
-        {
-            name: 'salaries',
-            y: 500000,
-            color: '#E94B3B'
-        }, {
-            name: 'location',
-            y: 1000000,
-            color: '#8AD5E7',
-             sliced: true,
-             selected: true
-        }
-        ],
+        data: [],
         id: 'pie-config'
       }],
       title: {
