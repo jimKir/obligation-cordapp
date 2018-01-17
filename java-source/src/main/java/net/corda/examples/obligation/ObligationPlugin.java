@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class ObligationPlugin implements WebServerPluginRegistry {
-    private final List<Function<CordaRPCOps, ?>> webApis = ImmutableList.of(ObligationApi::new, WorkAPI::new);
+    private final List<Function<CordaRPCOps, ?>> webApis = ImmutableList.of(ObligationApi::new, WorkAPI::new, CapacityAPI::new);
 
     private final Map<String, String> staticServeDirs = ImmutableMap.of(
             "obligation", getClass().getClassLoader().getResource("obligationWeb").toExternalForm()

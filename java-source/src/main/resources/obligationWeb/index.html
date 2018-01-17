@@ -32,7 +32,7 @@
             <a class="navbar-brand" href="#">{{demoApp.thisNode}}</a>
         </div>
 
-        <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">OfFer Budget for Work</button>
+        <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">Offer Budget for Feature</button>
         <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-if="!demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue Budget</button>
     </div>
 </nav>
@@ -45,21 +45,24 @@
         <div class="modal-body">
             <div class="form-group">
                 <label for="createIOUCounterparty" class="control-label">Counter-party:</label>
-                <select ng-model="createIOUModal.form.counterparty" class="form-control" id="createIOUCounterparty"
+                <select ng-change="createIOUModal.populateForm()" ng-model="createIOUModal.form.counterparty" class="form-control" id="createIOUCounterparty"
                         ng-options="peer as peer for peer in createIOUModal.providers">
                 </select>
             </div>
-            <div class="form-group">
-                <label for="createWorkFeatureTitle" class="control-label">Feature Title</label>
-                <input type="text" ng-model="createIOUModal.form.featureTitle" class="form-control" id="createWorkFeatureTitle">
+            <div class="form-group" ng-if="!!createIOUModal.form.featureTitle">
+                <label for="createBgtFeatureTitle" class="control-label">Feature Title</label>
+                {{createIOUModal.form.featureTitle}}
+                <input style="display:none" type="text" ng-model="createIOUModal.form.featureTitle" class="form-control" id="createBgtFeatureTitle">
             </div>
-            <div class="form-group">
-                <label for="createWorkDescription" class="control-label">Feature Description</label>
-                <input type="text" ng-model="createIOUModal.form.description" class="form-control" id="createWorkDescription">
+            <div class="form-group" ng-if="!!createIOUModal.form.description">
+                <label for="createBgtDescription" class="control-label">Feature Description</label>
+                {{createIOUModal.form.description}}
+                <input style="display:none"  type="text" ng-model="createIOUModal.form.description" class="form-control" id="createBgtDescription">
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-if="!!createIOUModal.form.amount">
                 <label for="createIOUAmount" class="control-label">Budget:</label>
-                <input type="text" ng-model="createIOUModal.form.amount" class="form-control" id="createIOUAmount">
+                {{createIOUModal.form.amount}}
+                <input style="display:none"  type="text" ng-model="createIOUModal.form.amount" class="form-control" id="createIOUAmount">
             </div>
             <div ng-show="createIOUModal.formError" class="form-group">
                 <div class="alert alert-danger" role="alert">
@@ -72,6 +75,46 @@
         <div class="modal-footer">
             <button ng-click="createIOUModal.cancel()" type="button" class="btn btn-default">Close</button>
             <button ng-click="createIOUModal.create()" type="button" class="btn btn-primary">Offer Budget</button>
+        </div>
+    </form>
+</script>
+
+
+<script type="text/ng-template" id="createWorkModal.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Offer feature to Sponsor</h4>
+    </div>
+    <form>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="createWorkCounterparty" class="control-label">Counter-party:</label>
+                <select ng-model="createWorkModal.form.counterparty" class="form-control" id="createWorkCounterparty"
+                        ng-options="peer as peer for peer in createWorkModal.sposnsors">
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="createWorkFeatureTitle" class="control-label">Feature Title</label>
+                <input type="text" ng-model="createWorkModal.form.featureTitle" class="form-control" id="createWorkFeatureTitle">
+            </div>
+            <div class="form-group">
+                <label for="createWorkDescription" class="control-label">Feature Description</label>
+                <input type="text" ng-model="createWorkModal.form.description" class="form-control" id="createWorkDescription">
+            </div>
+            <div class="form-group">
+                <label for="createWorkAmount" class="control-label">Budget:</label>
+                <input type="text" ng-model="createWorkModal.form.amount" class="form-control" id="createWorkAmount">
+            </div>
+            <div ng-show="createWorkModal.formError" class="form-group">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Enter valid Budget offer parameters
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button ng-click="createWorkModal.cancel()" type="button" class="btn btn-default">Close</button>
+            <button ng-click="createWorkModal.create()" type="button" class="btn btn-primary">Offer feature</button>
         </div>
     </form>
 </script>
@@ -185,10 +228,36 @@
     </div>
 </script>
 
+<div class="row" ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-if="!demoApp.isProvider(demoApp.thisNode)" >
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="panel panel-primary" >
+            <div class="panel-heading">
+                <h3 class="panel-title">Remaining budget:</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="cash in demoApp.cashBalances">
+                        <td class="vert-align">{{cash}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-10">
-        <div class="panel panel-primary">
+        <div class="panel panel-primary" >
             <div class="panel-heading">
                 <h3 class="panel-title">Cash balances:</h3>
             </div>

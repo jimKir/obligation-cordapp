@@ -5,27 +5,47 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
     const demoApp = this;
 
     const apiBaseURL = "/api/obligation/";
-
+    const apiBaseURLb = "/api/work/";
     // Retrieves the identity of this and other nodes.
     let peers = [];
+    let works = [];
     $http.get(apiBaseURL + "me").then((response) => demoApp.thisNode = response.data.me);
     $http.get(apiBaseURL + "peers").then((response) => peers = response.data.peers);
+    $http.get(apiBaseURLb + "works").then((response) => works = response.data);
 
     /** Displays the IOU creation modal. */
     demoApp.openCreateIOUModal = () => {
+        console.log(works);
         const createIOUModal = $uibModal.open({
             templateUrl: 'createIOUModal.html',
             controller: 'CreateIOUModalCtrl',
             controllerAs: 'createIOUModal',
             resolve: {
                 apiBaseURL: () => apiBaseURL,
-                peers: () => peers
+                peers: () => peers,
+                works: () => works
             }
         });
 
         // Ignores the modal result events.
         createIOUModal.result.then(() => {}, () => {});
     };
+
+    demoApp.openCreateWorkModal = () => {
+    console.log('try to pen it');
+            const createWorkModal = $uibModal.open({
+                templateUrl: 'createWorkModal.html',
+                controller: 'CreateWorkModalCtrl',
+                controllerAs: 'createWorkModal',
+                resolve: {
+                    apiBaseURL: () => apiBaseURLb,
+                    peers: () => peers
+                }
+            });
+
+            // Ignores the modal result events.
+            createWorkModal.result.then(() => {console.log('open the work modal')}, () => {console.log('open the work modal outside')});
+        };
 
     demoApp.isSponsor = (typeText) => {
         console.log(typeText);

@@ -3,33 +3,46 @@ package net.corda.examples.obligation.flows;
 import co.paralleluniverse.fibers.Suspendable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import net.corda.core.contracts.Amount;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
+import net.corda.core.contracts.Amount;
 import net.corda.core.transactions.TransactionBuilder;
 import net.corda.core.utilities.ProgressTracker;
-import net.corda.examples.obligation.Work;
-import net.corda.examples.obligation.WorkContract;
+import net.corda.examples.obligation.Capacity;
+import net.corda.examples.obligation.CapacityContract;
+
 
 import java.security.PublicKey;
 import java.time.Duration;
 import java.util.Currency;
 import java.util.List;
 
+
 /**
  * Created by pai on 16.01.18.
+ *
+ *
  */
-public class IssueWork {
+public class IssueCapacity {
 
     @InitiatingFlow
     @StartableByRPC
     public static class Initiator extends FlowLogic<SignedTransaction> {
 
-        private final Amount<Currency> amount;
+        // PC-Resource-Vendor/HR
+        private Integer resourceCount;
+        private Integer durationInMonths;
+        private Integer grade;
+
+        private final Amount<Currency> totalResourceAmount;
+
+        // PC-GROUP-CTO
+        private String assetType;
+        private Integer assetCount;
+        private final Amount<Currency> totalAssetAmount;
+
         private final Party lender;
-        private String featureTitle;
-        private String description;
 
         private final ProgressTracker.Step INITIALISING = new ProgressTracker.Step("Performing initial steps.");
         private final ProgressTracker.Step BUILDING = new ProgressTracker.Step("Performing initial steps.");
@@ -49,13 +62,30 @@ public class IssueWork {
                 INITIALISING, BUILDING, SIGNING, COLLECTING, FINALISING
         );
 
-        public Initiator(Amount<Currency> amount, Party lender, String featureTitle, String description) {
-            this.amount = amount;
+        public Initiator(Integer resourceCount, Integer durationInMonths, Integer grade, Amount<Currency> totalResourceAmount,
+                         Party lender) {
+            this.resourceCount = resourceCount;
+            this.durationInMonths = durationInMonths;
+            this.grade = grade;
+            this.totalResourceAmount = totalResourceAmount;
+
+            this.totalAssetAmount = null;
+
             this.lender = lender;
-            this.featureTitle = featureTitle;
-            this.description = description;
 
         }
+
+        public Initiator(String assetType, Integer assetCount, Amount<Currency> totalAssetAmount, Party lender) {
+            this.assetType = assetType;
+            this.assetCount = assetCount;
+            this.totalAssetAmount = totalAssetAmount;
+
+            this.totalResourceAmount = null;
+
+            this.lender = lender;
+
+        }
+
 
         @Override
         public ProgressTracker getProgressTracker() {
@@ -63,8 +93,10 @@ public class IssueWork {
         }
 
         @Suspendable
-        private Work createWork() throws FlowException {
-            return new Work(featureTitle, description, amount, lender, getOurIdentity());
+        private Capacity createCapacity() throws FlowException {
+
+            return new Capacity(resourceCount,durationInMonths, grade, totalResourceAmount,
+                    assetType, assetCount, totalAssetAmount, lender, getOurIdentity());
         }
 
         @Suspendable
@@ -75,16 +107,16 @@ public class IssueWork {
 
             // Step 1. Initialisation.
             progressTracker.setCurrentStep(INITIALISING);
-            final Work work = createWork();
-            final PublicKey ourSigningKey = work.getBorrower().getOwningKey();
+            final Capacity capacity = createCapacity();
+            final PublicKey ourSigningKey = capacity.getBorrower().getOwningKey();
 
             // Step 2. Building.
             progressTracker.setCurrentStep(BUILDING);
-            final List<PublicKey> requiredSigners = work.getParticipantKeys();
+            final List<PublicKey> requiredSigners = capacity.getParticipantKeys();
 
             final TransactionBuilder utx = new TransactionBuilder(getFirstNotary())
-                    .addOutputState(work, WorkContract.WORK_CONTRACT_ID)
-                    .addCommand(new WorkContract.Commands.Issue(), requiredSigners)
+                    .addOutputState(capacity, CapacityContract.CAPACITY_CONTRACT_ID)
+                    .addCommand(new CapacityContract.Commands.Issue(), requiredSigners)
                     .setTimeWindow(getServiceHub().getClock().instant(), Duration.ofSeconds(30));
 
             // Step 3. Sign the transaction.
@@ -115,10 +147,10 @@ public class IssueWork {
             return notaries.get(0);
         }
 
-
     }
 
-    @InitiatedBy(IssueWork.Initiator.class)
+
+    @InitiatedBy(IssueCapacity.Initiator.class)
     public static class Responder extends FlowLogic<SignedTransaction> {
         private final FlowSession otherFlow;
 
@@ -134,7 +166,5 @@ public class IssueWork {
         }
     }
 
+
 }
-
-
-
