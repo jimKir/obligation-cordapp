@@ -16,7 +16,7 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
         } else {
             createIOUModal.formError = false;
 
-            const amount = createIOUModal.form.amount;
+            const amount = Math.trunc(createIOUModal.form.amount);
             const featureTitle = createIOUModal.form.featureTitle;
             const description = createIOUModal.form.description;
             const party = createIOUModal.form.counterparty;
@@ -26,7 +26,8 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
             // We define the IOU creation endpoint.
             const issueIOUEndpoint =
                 apiBaseURL +
-                `issue-obligation?amount=${amount}&featureTitle=${featureTitle}&party=${party}&description=${description}`;
+                `issue-obligation?amount=${amount}&party=${party}&currency=CHF`;
+              //  `issue-obligation?amount=${amount}&featureTitle=${featureTitle}&party=${party}&description=${description}&currency=CHF`;
 
             // We hit the endpoint to create the IOU and handle success/failure responses.
             $http.get(issueIOUEndpoint).then(
@@ -102,7 +103,7 @@ angular.module('demoAppModule').controller('CreateWorkModalCtrl', function($http
             // We define the Work creation endpoint.
             const issueIOUEndpoint =
                 apiBaseURL +
-                `issue-work?amount=${amount}&featureTitle=${featureTitle}&party=${party}&description=${description}`;
+                `issue-work?amount=${amount}&featureTitle=${featureTitle}&party=${party}&description=${description}&currency=CHF`;
             // We hit the endpoint to create the IOU and handle success/failure responses.
             $http.get(issueIOUEndpoint).then(
                 (result) => createWorkModal.displayMessage(result),

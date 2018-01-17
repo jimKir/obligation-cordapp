@@ -290,15 +290,17 @@
             <div class="panel-body">Use the "Create IOU" button to send an IOU to a peer.</div>
         </div>
         <div ng-show="demoApp.ious.length" class="panel panel-primary">
+            <div   ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-if="!demoApp.isProvider(demoApp.thisNode)"  class="panel-heading">
+                <h3 class="panel-title">Pending - Non paid budget for accepted features</h3>
+            </div>
             <div class="panel-heading">
-                <h3 class="panel-title">Recorded IOUs:</h3>
+                <h3 class="panel-title"> Pending IOUS </h3>
             </div>
             <div class="panel-body">
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>From</th>
-                        <th>To</th>
+
                         <th>Amount</th>
                         <th>Paid</th>
                         <th>Actions</th>
@@ -306,8 +308,6 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="iou in demoApp.ious">
-                        <td class="vert-align">{{iou.lender.substring(0, 10)}}</td>
-                        <td class="vert-align">{{iou.borrower.substring(0, 10)}}</td>
                         <td class="vert-align">{{iou.amount}}</td>
                         <td class="vert-align">{{iou.paid}}</td>
                         <td>
