@@ -34,6 +34,7 @@
 
         <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">Offer Budget for Feature</button>
         <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-if="!demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue Budget</button>
+        <button ng-if="!demoApp.isSponsor(demoApp.thisNode)" ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Create work</button>
     </div>
 </nav>
 
@@ -49,10 +50,11 @@
                         ng-options="peer as peer for peer in createIOUModal.providers">
                 </select>
             </div>
-            <div class="form-group" ng-if="!!createIOUModal.form.featureTitle">
+            <div class="form-group" ng-if="!!createIOUModal.workList.length > 0">
                 <label for="createBgtFeatureTitle" class="control-label">Feature Title</label>
-                {{createIOUModal.form.featureTitle}}
-                <input style="display:none" type="text" ng-model="createIOUModal.form.featureTitle" class="form-control" id="createBgtFeatureTitle">
+                <select ng-change="createIOUModal.getWorkData()" ng-model="createIOUModal.form.selectedWork" class="form-control" id="createBgtFeatureTitle"
+                        ng-options="work as work for work in createIOUModal.workList">
+                </select>
             </div>
             <div class="form-group" ng-if="!!createIOUModal.form.description">
                 <label for="createBgtDescription" class="control-label">Feature Description</label>

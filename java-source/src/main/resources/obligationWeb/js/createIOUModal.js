@@ -6,6 +6,7 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
     createIOUModal.peers = peers;
     createIOUModal.works = works;
     createIOUModal.providers = peers.filter(peer => peer.includes('Provider'));
+    createIOUModal.workList = [];
     createIOUModal.form = {};
     createIOUModal.formError = false;
 
@@ -39,14 +40,24 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
 
     createIOUModal.populateForm = () => {
         let worksforSelectedProvider = createIOUModal.works.filter(work => work.state.data.borrower.includes(createIOUModal.form.counterparty))
-        console.log(worksforSelectedProvider);
 
-        createIOUModal.form.amount = worksforSelectedProvider[0].state.data.amount.replace(' CHF', '');
-        createIOUModal.form.description = worksforSelectedProvider[0].state.data.description;
-        createIOUModal.form.featureTitle = worksforSelectedProvider[0].state.data.featureTitle;
+        for(let i = 0; i < worksforSelectedProvider.length; i++) {
+            createIOUModal.workList.push(worksforSelectedProvider[i].state.data.featureTitle);
+            console.log('added work: ' + createIOUModal.workList);
+        }
     };
 
-
+    createIOUModal.getWorkData = () => {
+        let worksforSelectedProvider = createIOUModal.works.filter(work => work.state.data.borrower.includes(createIOUModal.form.counterparty))
+        console.log('inside getworkdata');
+        for(let i = 0; i < worksforSelectedProvider.length; i++) {
+            if(worksforSelectedProvider[i].state.data.featureTitle === createIOUModal.form.selectedWork) {
+                console.log('||>>> YES!');
+                createIOUModal.form.amount = worksforSelectedProvider[i].state.data.amount.replace(' CHF', '');
+                createIOUModal.form.description = worksforSelectedProvider[i].state.data.description;
+            }
+        }
+    };
 
     /** Displays the success/failure response from attempting to create an IOU. */
     createIOUModal.displayMessage = (message) => {

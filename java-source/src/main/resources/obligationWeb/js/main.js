@@ -9,6 +9,7 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
     // Retrieves the identity of this and other nodes.
     let peers = [];
     let works = [];
+    let workList = [];
     $http.get(apiBaseURL + "me").then((response) => demoApp.thisNode = response.data.me);
     $http.get(apiBaseURL + "peers").then((response) => peers = response.data.peers);
     $http.get(apiBaseURLb + "works").then((response) => works = response.data);
@@ -23,7 +24,8 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
             resolve: {
                 apiBaseURL: () => apiBaseURL,
                 peers: () => peers,
-                works: () => works
+                works: () => works,
+                workList: () => workList
             }
         });
 
@@ -151,18 +153,14 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
         data: [
         {
             name: 'salaries',
-            y: 55,
+            y: 500000,
             color: '#E94B3B'
         }, {
             name: 'location',
-            y: 30,
+            y: 1000000,
             color: '#8AD5E7',
              sliced: true,
              selected: true
-        }, {
-            name: 'equipment',
-            color: '#F8C471',
-            y: 15
         }
         ],
         id: 'pie-config'
