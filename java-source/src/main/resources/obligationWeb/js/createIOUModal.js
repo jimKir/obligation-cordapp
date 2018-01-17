@@ -1,5 +1,85 @@
 "use strict";
 
+
+
+
+
+angular.module('demoAppModule').controller('CreateCVPModalCtrl', function($http, $uibModalInstance, $uibModal, apiBaseURL, peers, works) {
+    const createCVPModal = this;
+
+    createCVPModal.peers = peers;
+    createCVPModal.works = works;
+    createCVPModal.providers = peers.filter(peer => peer.includes('Provider'));
+    createCVPModal.form = {};
+    createCVPModal.formError = false;
+
+    /** Validate and create an CVP. */
+    createCVPModal.create = () => {
+        if (invalidFormInput()) {
+            createCVPModal.formError = true;
+        } else {
+            createCVPModal.formError = false;
+
+            const totalAssetAmount = Math.trunc(createCVPModal.form.totalAssetAmount);
+            const assetCount = createCVPModal.form.assetCount;
+            const assetType = createCVPModal.form.assetType;
+            const party = createCVPModal.form.counterparty;
+
+            $uibModalInstance.close();
+
+            // We define the CVP creation endpoint.
+            const issueCVPEndpoint =
+                apiBaseURL +
+                // `issue-obligation?amount=${amount}&party=${party}&currency=CHF`;
+                `issue-obligation?totalAssetAmount=${totalAssetAmount}&assetCount=${assetCount}&party=${party}&assetType=${assetType}&currency=CHF`;
+
+            // We hit the endpoint to create the CVP and handle success/failure responses.
+            $http.get(issueCVPEndpoint).then(
+                (result) => createCVPModal.displayMessage(result),
+                (result) => createCVPModal.displayMessage(result)
+            );
+        }
+    };
+
+    createCVPModal.populateForm = () => {
+        let worksforSelectedProvider = createCVPModal.works.filter(work => work.state.data.borrower.includes(createCVPModal.form.counterparty))
+        console.log(worksforSelectedProvider);
+
+        createCVPModal.form.amount = worksforSelectedProvider[0].state.data.amount.replace(' CHF', '');
+        createCVPModal.form.description = worksforSelectedProvider[0].state.data.description;
+        createCVPModal.form.featureTitle = worksforSelectedProvider[0].state.data.featureTitle;
+    };
+
+
+
+    /** Displays the success/failure response from attempting to create an IOU. */
+    createIOUModal.displayMessage = (message) => {
+        const createIOUMsgModal = $uibModal.open({
+            templateUrl: 'createIOUMsgModal.html',
+            controller: 'createIOUMsgModalCtrl',
+            controllerAs: 'createIOUMsgModal',
+            resolve: {
+                message: () => message
+            }
+        });
+
+        // No behaviour on close / dismiss.
+        createIOUMsgModal.result.then(() => {}, () => {});
+    };
+
+    /** Closes the IOU creation modal. */
+    createIOUModal.cancel = () => $uibModalInstance.dismiss();
+
+    // Validates the IOU.
+    function invalidFormInput() {
+        return isNaN(createIOUModal.form.amount) || (createIOUModal.form.counterparty === undefined);
+    }
+});
+
+
+
+
+
 angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http, $uibModalInstance, $uibModal, apiBaseURL, peers, works) {
     const createIOUModal = this;
 
@@ -27,8 +107,8 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
             // We define the IOU creation endpoint.
             const issueIOUEndpoint =
                 apiBaseURL +
-                `issue-obligation?amount=${amount}&party=${party}&currency=CHF`;
-              //  `issue-obligation?amount=${amount}&featureTitle=${featureTitle}&party=${party}&description=${description}&currency=CHF`;
+               // `issue-obligation?amount=${amount}&party=${party}&currency=CHF`;
+               `issue-obligation?amount=${amount}&featureTitle=${featureTitle}&party=${party}&description=${description}&currency=CHF`;
 
             // We hit the endpoint to create the IOU and handle success/failure responses.
             $http.get(issueIOUEndpoint).then(

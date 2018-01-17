@@ -6,13 +6,36 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
 
     const apiBaseURL = "/api/obligation/";
     const apiBaseURLb = "/api/work/";
+    const apiBaseURLc = "/api/capacity/";
     // Retrieves the identity of this and other nodes.
     let peers = [];
     let works = [];
     let workList = [];
+    let capacities = [];
     $http.get(apiBaseURL + "me").then((response) => demoApp.thisNode = response.data.me);
     $http.get(apiBaseURL + "peers").then((response) => peers = response.data.peers);
     $http.get(apiBaseURLb + "works").then((response) => works = response.data);
+    $http.get(apiBaseURLb + "capacities").then((response) => capacities = response.data);
+
+
+    /** Displays the capacities creation modal. */
+    demoApp.openCreateCPVModal = () => {
+        console.log(works);
+        const createIOUModal = $uibModal.open({
+            templateUrl: 'createCPVModal.html',
+            controller: 'CreateCPVModalCtrl',
+            controllerAs: 'createCPVModal',
+            resolve: {
+                apiBaseURL: () => apiBaseURL,
+                peers: () => peers,
+                works: () => capacities
+            }
+        });
+
+        // Ignores the modal result events.
+        createIOUModal.result.then(() => {}, () => {});
+    };
+
 
     /** Displays the IOU creation modal. */
     demoApp.openCreateIOUModal = () => {

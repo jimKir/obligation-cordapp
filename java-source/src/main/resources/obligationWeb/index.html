@@ -34,9 +34,59 @@
 
         <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">Offer Budget for Feature</button>
         <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-if="!demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue Budget</button>
-        <button ng-if="!demoApp.isSponsor(demoApp.thisNode)" ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Create work</button>
+        <button ng-if="!demoApp.isSponsor(demoApp.thisNode)"  ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Suggest feature for budget </button>
+        <button ng-if="!demoApp.isSponsor(demoApp.thisNode)" ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="!demoApp.openCreateCPVModal()" type="button" class="btn btn-primary navbar-btn">Request capacity from Vendor </button>
+        <button ng-if="!demoApp.isSponsor(demoApp.thisNode)" ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="!demoApp.openCreateCPVModal()" type="button" class="btn btn-primary navbar-btn">Request Asset from Group CTO </button>
+        <button ng-if="!demoApp.isSponsor(demoApp.thisNode)" ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="!demoApp.openCreateCPVModal()" type="button" class="btn btn-primary navbar-btn">Request Resource Count from HR </button>
+
     </div>
 </nav>
+
+
+
+<script type="text/ng-template" id="createCVPModal.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Request Asset from Group CTO</h4>
+    </div>
+    <form>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="createCVPCounterparty" class="control-label">Counter-party:</label>
+                <select ng-change="createCVPModal.populateForm()" ng-model="createCVPModal.form.counterparty" class="form-control" id="createCVPCounterparty"
+                        ng-options="peer as peer for peer in createCVPModal.providers">
+                </select>
+            </div>
+            <div class="form-group" ng-if="!!createCVPModal.form.assetCount">
+                <label class="control-label">Asset Count</label>
+                {{createCVPModal.form.assetCount}}
+                <input style="display:none" type="text" ng-model="createCVPModal.form.assetCount" class="form-control" >
+            </div>
+            <div class="form-group" ng-if="!!createCVPModal.form.assetType">
+                <label class="control-label">Asset Type</label>
+                {{createCVPModal.form.assetType}}
+                <input style="display:none"  type="text" ng-model="createCVPModal.form.assetType" class="form-control" >
+            </div>
+            <div class="form-group" ng-if="!!createCVPModal.form.totalAssetAmount">
+                <label for="createCVPAmount" class="control-label">Forcasted Cost:</label>
+                {{createCVPModal.form.totalAssetAmount}}
+                <input style="display:none"  type="text" ng-model="createCVPModal.form.totalAssetAmount" class="form-control" id="createCVPAmount">
+            </div>
+            <div ng-show="createCVPModal.formError" class="form-group">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Enter valid Budget offer parameters
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button ng-click="createCVPModal.cancel()" type="button" class="btn btn-default">Close</button>
+            <button ng-click="createCVPModal.create()" type="button" class="btn btn-primary">Request capacity</button>
+        </div>
+    </form>
+</script>
+
+
 
 <script type="text/ng-template" id="createIOUModal.html">
     <div class="modal-header">
@@ -289,20 +339,19 @@
             <div class="panel-heading">
                 <h3 class="panel-title">There are no Pending Budget offers</h3>
             </div>
-            <div class="panel-body">Use the "Create IOU" button to send an IOU to a peer.</div>
+            <div class="panel-body">No transactions yet</div>
         </div>
         <div ng-show="demoApp.ious.length" class="panel panel-primary">
             <div   ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-if="!demoApp.isProvider(demoApp.thisNode)"  class="panel-heading">
                 <h3 class="panel-title">Pending - Non paid budget for accepted features</h3>
             </div>
-            <div class="panel-heading">
-                <h3 class="panel-title"> Pending IOUS </h3>
-            </div>
+
             <div class="panel-body">
                 <table class="table">
                     <thead>
                     <tr>
-
+                        <th>From</th>
+                        <th>To</th>
                         <th>Amount</th>
                         <th>Paid</th>
                         <th>Actions</th>
@@ -310,6 +359,8 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="iou in demoApp.ious">
+                        <td class="vert-align">{{iou.lender}</td>
+                        <td class="vert-align">{{iou.borrower}}</td>
                         <td class="vert-align">{{iou.amount}}</td>
                         <td class="vert-align">{{iou.paid}}</td>
                         <td>
@@ -334,7 +385,7 @@
     <div class="col-md-10">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">Budget charts:</h3>
+                <h3 class="panel-title">Budget overview:</h3>
             </div>
             <div class="panel-body">
                 <table class="table">
