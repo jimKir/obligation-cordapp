@@ -380,7 +380,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row" ng-if="demoApp.isSponsor(demoApp.thisNode) && demoApp.cashBalances.CHF.length > 0">
     <div class="col-md-1"></div>
     <div class="col-md-10">
         <div class="panel panel-primary">
@@ -392,9 +392,9 @@
                     <tbody>
                     <tr>
                         <td class="vert-align">
-                                <highchart id="pie-chart" config="pieConfig" class="span10" disable-change-detection="false"></highchart>
+                            <highchart id="pie-chart" config="pieConfig" class="span10" disable-change-detection="false"></highchart>
                         </td>
-                        <td class="vert-align" ng-if="graphConfig">
+                        <td class="vert-align">
                             <highchart id="graph-chart" config="graphConfig" class="span10" disable-change-detection="false"></highchart>
                         </td>
                     </tr>
