@@ -33,12 +33,13 @@
         </div>
 
         <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">Offer Budget for Feature</button>
-        <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-if="!demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue Budget</button>
-        <button ng-if="!demoApp.isSponsor(demoApp.thisNode)"  ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Suggest feature for budget </button>
-        <button ng-if="!demoApp.isSponsor(demoApp.thisNode)" ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="!demoApp.openCreateCPVModal()" type="button" class="btn btn-primary navbar-btn">Request capacity from Vendor </button>
-        <button ng-if="!demoApp.isSponsor(demoApp.thisNode)" ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="!demoApp.openCreateCPVModal()" type="button" class="btn btn-primary navbar-btn">Request Asset from Group CTO </button>
-        <button ng-if="!demoApp.isSponsor(demoApp.thisNode)" ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="!demoApp.openCreateCPVModal()" type="button" class="btn btn-primary navbar-btn">Request Resource Count from HR </button>
-
+        <button ng-if="demoApp.isSponsor(demoApp.thisNode)"  ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue Budget</button>
+        <button ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Suggest feature for budget </button>
+        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateCPVModal()" type="button" class="btn btn-primary navbar-btn">Request capacity from Vendor </button>
+        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateCPVModal()" type="button" class="btn btn-primary navbar-btn">Request Asset from Group CTO </button>
+        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateCPVModal()" type="button" class="btn btn-primary navbar-btn">Request Resource Count from HR </button>
+        <button ng-if="demoApp.isCTO(demoApp.thisNode)" ng-click="demoApp.openCreateINVModal()" type="button" class="btn btn-primary navbar-btn">Create invoice for provider</button>
+        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="!demoApp.openCreatePIModal()" type="button" class="btn btn-primary navbar-btn">Pay invoices</button>
     </div>
 </nav>
 
@@ -86,7 +87,49 @@
     </form>
 </script>
 
-
+<script type="text/ng-template" id="createPIModal.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Pay invoices</h4>
+    </div>
+    <form>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="createPICounterparty" class="control-label">Counter-party:</label>
+                <select ng-change="createPIModal.populateForm()" ng-model="createPIModal.form.counterparty" class="form-control" id="createPICounterparty"
+                        ng-options="peer as peer for peer in createPIModal.providers">
+                </select>
+            </div>
+            <input style="display:none"  type="text" ng-model="createIOUModal.form.featureTitle" class="form-control">
+            <div class="form-group" ng-if="!!createPIModal.workList.length > 0">
+                <label for="createBgtFeatureTitle" class="control-label">Cost title</label>
+                <select ng-change="createPIModal.getWorkData()" ng-model="createPIModal.form.selectedWork" class="form-control" id="createBgtFeatureTitle"
+                        ng-options="work as work for work in createPIModal.workList">
+                </select>
+            </div>
+            <div class="form-group" ng-if="!!createPIModal.form.description">
+                <label for="createBgtDescription" class="control-label">Cost details</label>
+                {{createPIModal.form.description}}
+                <input style="display:none"  type="text" ng-model="createPIModal.form.description" class="form-control" id="createBgtDescription">
+            </div>
+            <div class="form-group" ng-if="!!createPIModal.form.amount">
+                <label for="createPIAmount" class="control-label">Invoice amount:</label>
+                {{createPIModal.form.amount}}
+                <input style="display:none"  type="text" ng-model="createPIModal.form.amount" class="form-control" id="createPIAmount">
+            </div>
+            <div ng-show="createPIModal.formError" class="form-group">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Enter valid Budget offer parameters
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button ng-click="createPIModal.cancel()" type="button" class="btn btn-default">Close</button>
+            <button ng-click="createPIModal.create()" type="button" class="btn btn-primary">Pay invoice</button>
+        </div>
+    </form>
+</script>
 
 <script type="text/ng-template" id="createIOUModal.html">
     <div class="modal-header">
@@ -102,14 +145,15 @@
             </div>
             <div class="form-group" ng-if="!!createIOUModal.workList.length > 0">
                 <label for="createBgtFeatureTitle" class="control-label">Feature Title</label>
-                <select ng-change="createIOUModal.getWorkData()" ng-model="createIOUModal.form.selectedWork" class="form-control" id="createBgtFeatureTitle"
+                <select ng-change="createIOUModal.getWorkData()" ng-model="createIOUModal.form.selectedWork" class="form-control"
                         ng-options="work as work for work in createIOUModal.workList">
                 </select>
             </div>
+            <input style="display:none"  type="text" ng-model="createIOUModal.form.featureTitle" class="form-control">
             <div class="form-group" ng-if="!!createIOUModal.form.description">
                 <label for="createBgtDescription" class="control-label">Feature Description</label>
                 {{createIOUModal.form.description}}
-                <input style="display:none"  type="text" ng-model="createIOUModal.form.description" class="form-control" id="createBgtDescription">
+                <input style="display:none"  type="text" ng-model="createIOUModal.form.description" class="form-control">
             </div>
             <div class="form-group" ng-if="!!createIOUModal.form.amount">
                 <label for="createIOUAmount" class="control-label">Budget:</label>
@@ -130,6 +174,46 @@
         </div>
     </form>
 </script>
+
+<script type="text/ng-template" id="createINVModal.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Send invoice to provider</h4>
+    </div>
+    <form>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="createINVCounterparty" class="control-label">Counter-party:</label>
+                <select ng-model="createINVModal.form.counterparty" class="form-control" id="createINVCounterparty"
+                        ng-options="peer as peer for peer in createINVModal.sposnsors">
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="createINVFeatureTitle" class="control-label">Feature Title</label>
+                <input type="text" ng-model="createINVModal.form.featureTitle" class="form-control" id="createINVFeatureTitle">
+            </div>
+            <div class="form-group">
+                <label for="createINVDescription" class="control-label">Feature Description</label>
+                <input type="text" ng-model="createINVModal.form.description" class="form-control" id="createINVDescription">
+            </div>
+            <div class="form-group">
+                <label for="createINVAmount" class="control-label">Budget:</label>
+                <input type="text" ng-model="createINVModal.form.amount" class="form-control" id="createINVAmount">
+            </div>
+            <div ng-show="createINVModal.formError" class="form-group">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    Enter valid Budget offer parameters
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button ng-click="createINVModal.cancel()" type="button" class="btn btn-default">Close</button>
+            <button ng-click="createINVModal.create()" type="button" class="btn btn-primary">Send invoice</button>
+        </div>
+    </form>
+</script>
+
 
 
 <script type="text/ng-template" id="createWorkModal.html">
@@ -359,7 +443,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="iou in demoApp.ious">
-                        <td class="vert-align">{{iou.lender}</td>
+                        <td class="vert-align">{{iou.lender}}</td>
                         <td class="vert-align">{{iou.borrower}}</td>
                         <td class="vert-align">{{iou.amount}}</td>
                         <td class="vert-align">{{iou.paid}}</td>

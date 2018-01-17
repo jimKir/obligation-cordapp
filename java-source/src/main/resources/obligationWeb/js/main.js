@@ -26,9 +26,30 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
             controller: 'CreateCPVModalCtrl',
             controllerAs: 'createCPVModal',
             resolve: {
+                apiBaseURL: () => apiBaseURLc,
+                peers: () => peers,
+                works: () => capacities,
+                capacities: () => capacities
+            }
+        });
+
+        // Ignores the modal result events.
+        createIOUModal.result.then(() => {}, () => {});
+    };
+
+
+    /** Displays the Pay invoice creation modal. */
+    demoApp.openCreatePIModal = () => {
+        console.log(works);
+        const createIOUModal = $uibModal.open({
+            templateUrl: 'createPIModal.html',
+            controller: 'CreatePIModalCtrl',
+            controllerAs: 'createPIModal',
+            resolve: {
                 apiBaseURL: () => apiBaseURL,
                 peers: () => peers,
-                works: () => capacities
+                works: () => works,
+                workList: () => workList
             }
         });
 
@@ -72,10 +93,41 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
             createWorkModal.result.then(() => {console.log('open the work modal')}, () => {console.log('open the work modal outside')});
         };
 
+
+    demoApp.openCreateINVModal = () => {
+        console.log('try to pen it');
+        const createINVModal = $uibModal.open({
+            templateUrl: 'createINVModal.html',
+            controller: 'CreateINVModalCtrl',
+            controllerAs: 'createINVModal',
+            resolve: {
+                apiBaseURL: () => apiBaseURLb,
+                peers: () => peers,
+                works: () => works,
+                capacities: () => capacities
+            }
+        });
+
+        // Ignores the modal result events.
+        createINVModal.result.then(() => {console.log('open the INV modal')}, () => {console.log('open the INV modal outside')});
+    };
+
     demoApp.isSponsor = (typeText) => {
         console.log(typeText);
         console.log(typeText.includes('Sponsor'));
         return typeText.includes('Sponsor');
+    }
+
+    demoApp.isProvider = (typeText) => {
+        console.log(typeText);
+        console.log(typeText.includes('SolutionProvider'));
+        return typeText.includes('SolutionProvider');
+    }
+
+    demoApp.isCTO = (typeText) => {
+        console.log(typeText);
+        console.log(typeText.includes('CTO'));
+        return typeText.includes('CTO');
     }
 
     /** Displays the cash issuance modal. */
