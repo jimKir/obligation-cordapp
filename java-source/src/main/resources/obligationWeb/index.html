@@ -34,12 +34,6 @@
 
         <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">OfFer Budget for Work</button>
         <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-if="!demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue Budget</button>
-        <button ng-click="demoApp.refresh()" type="button" class="btn btn-default navbar-btn"><span
-                class="glyphicon glyphicon-refresh"></span></button>
-    </div>
-
-    <div class="row">
-        <highchart id="chart1" config="chartConfig" class="span10" disable-change-detection="false"></highchart>
     </div>
 </nav>
 
@@ -263,6 +257,33 @@
         <div class="col-md-1"></div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Budget charts:</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td class="vert-align">
+                                <highchart id="pie-chart" config="pieConfig" class="span10" disable-change-detection="false"></highchart>
+                        </td>
+                        <td class="vert-align" ng-if="graphConfig">
+                            <highchart id="graph-chart" config="graphConfig" class="span10" disable-change-detection="false"></highchart>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+</div>
+
 
 </body>
 </html>

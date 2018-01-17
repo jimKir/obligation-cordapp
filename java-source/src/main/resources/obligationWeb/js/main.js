@@ -1,7 +1,7 @@
 "use strict";
 
 // Define your backend here.
-angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('DemoAppCtrl', function($http, $location, $uibModal, $scope) {
+angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('DemoAppCtrl', function($http, $location, $uibModal, $scope, $timeout) {
     const demoApp = this;
 
     const apiBaseURL = "/api/obligation/";
@@ -79,7 +79,7 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
     };
 
     /** Refreshes the front-end. */
-    demoApp.refresh = () => {
+    setInterval(() => {
         // Update the list of IOUs.
         $http.get(apiBaseURL + "obligations").then((response) => demoApp.ious =
             Object.keys(response.data).map((key) => response.data[key].state.data));
@@ -87,12 +87,29 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
         // Update the cash balances.
         $http.get(apiBaseURL + "cash-balances").then((response) => demoApp.cashBalances =
             response.data);
-    }
 
-    demoApp.refresh();
+        // Update list of cash issues.
+        $http.get(apiBaseURL + "cash").then((response) => demoApp.cash =
+            response.data);
+        if(demoApp.cash) {
+            let issuedBudgetList = [];
+            let totalAmount = 0;
+            for(let i = 0; i < demoApp.cash.length; i++) {
+                let val = parseInt(demoApp.cash[i].state.data.amount.split(' ').shift())
+                issuedBudgetList.push(totalAmount + val);
+                totalAmount += val;
+            }
+            $timeout(() => {
+              $scope.graphConfig.series = [{
+                  name: 'Issued budget',
+                  data: issuedBudgetList
+              }];
+            });
+        }
+    }, 2000);
 
-    // Pie Chart - Mock data
-    $scope.chartConfig = {
+    // Highcharts Pie Chart - Mock data
+    $scope.pieConfig = {
       chart: {
         type: 'pie'
       },
@@ -110,7 +127,7 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
           }
       },
       series: [{
-        name: 'Budget',
+        name: 'Budget allocation',
         data: [
         {
             name: 'salaries',
@@ -128,10 +145,79 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
             y: 15
         }
         ],
-        id: 'series1'
+        id: 'pie-config'
       }],
       title: {
-        text: 'Budget'
+        text: 'Budget allocation'
+      },
+      responsive: {
+        rules: [{
+
+            condition: {
+                maxWidth: 300
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+    }
+
+    // Highcharts line chart
+    $scope.graphConfig = {
+      chart: {
+        type: 'line'
+      },
+      tooltip: {
+          pointFormat: '{series.name}: <b>{point.y}</b>'
+      },
+      title: {
+          text: 'Total budget'
+      },
+      xAxis: {
+          title: {
+              text: 'Time'
+          },
+          labels: {
+            enabled: false
+          }
+      },
+      yAxis: {
+          title: {
+              text: 'Amount'
+          }
+      },
+      legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'middle'
+      },
+
+      plotOptions: {
+          series: {
+              label: {
+                  connectorAllowed: false
+              }
+          }
+      },
+
+      responsive: {
+          rules: [{
+              condition: {
+                  maxWidth: 300
+              },
+              chartOptions: {
+                  legend: {
+                      layout: 'horizontal',
+                      align: 'center',
+                      verticalAlign: 'bottom'
+                  }
+              }
+          }]
       }
     }
 });
