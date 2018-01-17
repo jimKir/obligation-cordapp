@@ -1,9 +1,10 @@
 "use strict";
 
-angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http, $uibModalInstance, $uibModal, apiBaseURL, peers) {
+angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http, $uibModalInstance, $uibModal, apiBaseURL, peers, works) {
     const createIOUModal = this;
 
     createIOUModal.peers = peers;
+    createIOUModal.works = works;
     createIOUModal.providers = peers.filter(peer => peer.includes('Provider'));
     createIOUModal.form = {};
     createIOUModal.formError = false;
@@ -34,6 +35,17 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
             );
         }
     };
+
+    createIOUModal.populateForm = () => {
+        let worksforSelectedProvider = createIOUModal.works.filter(work => work.state.data.borrower.includes(createIOUModal.form.counterparty))
+        console.log(worksforSelectedProvider);
+
+        createIOUModal.form.amount = worksforSelectedProvider[0].state.data.amount.replace(' CHF', '');
+        createIOUModal.form.description = worksforSelectedProvider[0].state.data.description;
+        createIOUModal.form.featureTitle = worksforSelectedProvider[0].state.data.featureTitle;
+    };
+
+
 
     /** Displays the success/failure response from attempting to create an IOU. */
     createIOUModal.displayMessage = (message) => {
@@ -72,6 +84,7 @@ angular.module('demoAppModule').controller('CreateWorkModalCtrl', function($http
     createWorkModal.form = {};
     createWorkModal.formError = false;
 
+
     /** Validate and create an Work. */
     createWorkModal.create = () => {
         if (invalidFormInput()) {
@@ -85,7 +98,7 @@ angular.module('demoAppModule').controller('CreateWorkModalCtrl', function($http
             const party = createWorkModal.form.counterparty;
 
             $uibModalInstance.close();
-    apiBaseURL = apiBaseURL.replace('obligation','work')
+
             // We define the Work creation endpoint.
             const issueIOUEndpoint =
                 apiBaseURL +
@@ -97,6 +110,8 @@ angular.module('demoAppModule').controller('CreateWorkModalCtrl', function($http
             );
         }
     };
+
+
 
     /** Displays the success/failure response from attempting to create an IOU. */
     createWorkModal.displayMessage = (message) => {
