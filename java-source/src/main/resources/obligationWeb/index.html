@@ -115,6 +115,7 @@
             <div class="form-group" ng-if="!!createPIModal.form.amount">
                 <label for="createPIAmount" class="control-label">Invoice amount:</label>
                 {{createPIModal.form.amount}}
+                <input style="display:none"  type="text" ng-model="createIOUModal.form.workid" class="form-control">
                 <input style="display:none"  type="text" ng-model="createPIModal.form.amount" class="form-control" id="createPIAmount">
             </div>
             <div ng-show="createPIModal.formError" class="form-group">
@@ -151,6 +152,7 @@
                 </select>
             </div>
             <input style="display:none"  type="text" ng-model="createIOUModal.form.featureTitle" class="form-control">
+            <input style="display:none"  type="text" ng-model="createIOUModal.form.workid" class="form-control">
             <div class="form-group" ng-if="!!createIOUModal.form.description">
                 <label for="createBgtDescription" class="control-label">Feature Description</label>
                 {{createIOUModal.form.description}}

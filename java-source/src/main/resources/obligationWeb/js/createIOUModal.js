@@ -100,6 +100,7 @@ angular.module('demoAppModule').controller('CreatePIModalCtrl', function($http, 
             const featureTitle = createPIModal.form.featureTitle;
             const description = createPIModal.form.description;
             const party = createPIModal.form.counterparty;
+            const workid = createPIModal.form.workid;
 
             $uibModalInstance.close();
 
@@ -107,7 +108,7 @@ angular.module('demoAppModule').controller('CreatePIModalCtrl', function($http, 
             const issuePIEndpoint =
                 apiBaseURL +
                 // `issue-obligation?amount=${amount}&party=${party}&currency=CHF`;
-                `issue-obligation?amount=${amount}&featureTitle=${featureTitle}&party=${party}&description=${description}&currency=CHF&linkingId=79d1308a-6bd2-4564-a158-29bcc3a5db1b`;
+                `issue-obligation?amount=${amount}&featureTitle=${featureTitle}&party=${party}&description=${description}&currency=CHF&linkingId=${workid}`;
 
             // We hit the endpoint to create the PI and handle success/failure responses.
             $http.get(issuePIEndpoint).then(
@@ -134,6 +135,7 @@ angular.module('demoAppModule').controller('CreatePIModalCtrl', function($http, 
                 console.log('||>>> YES!');
                 createPIModal.form.amount = worksforSelectedProvider[i].state.data.amount.replace(' CHF', '');
                 createPIModal.form.description = worksforSelectedProvider[i].state.data.description;
+                createPIModal.form.workid = worksforSelectedProvider[i].state.data.linearId.id;
                 createIOUModal.form.featureTitle = createIOUModal.form.selectedWork;
             }
         }
@@ -186,14 +188,14 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
             const featureTitle = createIOUModal.form.featureTitle;
             const description = createIOUModal.form.description;
             const party = createIOUModal.form.counterparty;
-
+            const workid = createIOUModal.form.workid;
             $uibModalInstance.close();
 
             // We define the IOU creation endpoint.
             const issueIOUEndpoint =
                 apiBaseURL +
                // `issue-obligation?amount=${amount}&party=${party}&currency=CHF`;
-               `issue-obligation?amount=${amount}&featureTitle=${featureTitle}&party=${party}&description=${description}&currency=CHF&linkingId=79d1308a-6bd2-4564-a158-29bcc3a5db1b`;
+               `issue-obligation?amount=${amount}&featureTitle=${featureTitle}&party=${party}&description=${description}&currency=CHF&linkingId=${workid}`;
 
             // We hit the endpoint to create the IOU and handle success/failure responses.
             $http.get(issueIOUEndpoint).then(
@@ -219,6 +221,7 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
             if(worksforSelectedProvider[i].state.data.featureTitle === createIOUModal.form.selectedWork) {
                 createIOUModal.form.amount = worksforSelectedProvider[i].state.data.amount.replace(' CHF', '');
                 createIOUModal.form.description = worksforSelectedProvider[i].state.data.description;
+                createIOUModal.form.workid = worksforSelectedProvider[i].state.data.linearId.id;
                 createIOUModal.form.featureTitle = createIOUModal.form.selectedWork;
             }
         }
