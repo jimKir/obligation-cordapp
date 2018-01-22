@@ -169,7 +169,8 @@ angular.module('demoAppModule').controller('CreateIOUModalCtrl', function($http,
 
     createIOUModal.peers = peers;
     createIOUModal.works = works;
-    createIOUModal.providers = peers.filter(peer => peer.includes('Provider'));
+    //createIOUModal.providers = peers.filter(peer => peer.includes('Provider'));
+    createIOUModal.providers = peers;
     createIOUModal.workList = [];
     createIOUModal.form = {};
     createIOUModal.formError = false;
@@ -257,6 +258,7 @@ angular.module('demoAppModule').controller('CreateWorkModalCtrl', function($http
 
     createWorkModal.peers = peers;
     createWorkModal.sposnsors = peers.filter(peer => peer.includes('Sponsor'));
+    createWorkModal.vendors = peers.filter(peer => peer.includes('PC'));
     createWorkModal.form = {};
     createWorkModal.formError = false;
 

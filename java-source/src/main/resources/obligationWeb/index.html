@@ -26,20 +26,21 @@
 </head>
 
 <body ng-app="demoAppModule" ng-controller="DemoAppCtrl as demoApp">
+
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">{{demoApp.thisNode}}</a>
         </div>
 
-        <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">Offer Budget for Feature</button>
-        <button ng-if="demoApp.isSponsor(demoApp.thisNode)"  ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Issue Budget</button>
-        <button ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Suggest feature for budget </button>
-        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateCPVModal()" type="button" class="btn btn-primary navbar-btn">Request capacity from Vendor </button>
-        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateCPVModal()" type="button" class="btn btn-primary navbar-btn">Request Asset from Group CTO </button>
-        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateCPVModal()" type="button" class="btn btn-primary navbar-btn">Request Resource Count from HR </button>
-        <button ng-if="demoApp.isCTO(demoApp.thisNode)" ng-click="demoApp.openCreateINVModal()" type="button" class="btn btn-primary navbar-btn">Create invoice for provider</button>
-        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="!demoApp.openCreatePIModal()" type="button" class="btn btn-primary navbar-btn">Pay invoices</button>
+        <button ng-if="demoApp.isSponsor(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">Agree Budget for Work Package</button>
+        <button ng-if="demoApp.isSponsor(demoApp.thisNode)"  ng-click="demoApp.openIssueCashModal()" type="button" class="btn btn-primary navbar-btn">Get Money</button>
+        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Suggest Work Package to Sponsor </button>
+        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Request people from Vendor </button>
+        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Request IT Asset from Group CTO </button>
+        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Request people from HR </button>
+        <button ng-if="demoApp.isCTO(demoApp.thisNode)" ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Create invoice for Services</button>
+        <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">Pay invoices</button>
     </div>
 </nav>
 
@@ -133,12 +134,12 @@
 
 <script type="text/ng-template" id="createIOUModal.html">
     <div class="modal-header">
-        <h4 class="modal-title">Offer budget to Solution Provider</h4>
+        <h4 class="modal-title">Service Agreement</h4>
     </div>
     <form>
         <div class="modal-body">
             <div class="form-group">
-                <label for="createIOUCounterparty" class="control-label">Counter-party:</label>
+                <label for="createIOUCounterparty" class="control-label">Party:</label>
                 <select ng-change="createIOUModal.populateForm()" ng-model="createIOUModal.form.counterparty" class="form-control" id="createIOUCounterparty"
                         ng-options="peer as peer for peer in createIOUModal.providers">
                 </select>
@@ -170,7 +171,7 @@
         </div>
         <div class="modal-footer">
             <button ng-click="createIOUModal.cancel()" type="button" class="btn btn-default">Close</button>
-            <button ng-click="createIOUModal.create()" type="button" class="btn btn-primary">Offer Budget</button>
+            <button ng-click="createIOUModal.create()" type="button" class="btn btn-primary">Agreement</button>
         </div>
     </form>
 </script>
@@ -218,15 +219,17 @@
 
 <script type="text/ng-template" id="createWorkModal.html">
     <div class="modal-header">
-        <h4 class="modal-title">Offer feature to Sponsor</h4>
+        <h4 class="modal-title">Create Work Package</h4>
     </div>
     <form>
         <div class="modal-body">
             <div class="form-group">
-                <label for="createWorkCounterparty" class="control-label">Counter-party:</label>
+                <label for="createWorkCounterparty" class="control-label">Party:</label>
+
                 <select ng-model="createWorkModal.form.counterparty" class="form-control" id="createWorkCounterparty"
-                        ng-options="peer as peer for peer in createWorkModal.sposnsors">
+                        ng-options="peer as peer for peer in createWorkModal.peers">
                 </select>
+
             </div>
             <div class="form-group">
                 <label for="createWorkFeatureTitle" class="control-label">Feature Title</label>
@@ -250,10 +253,12 @@
         </div>
         <div class="modal-footer">
             <button ng-click="createWorkModal.cancel()" type="button" class="btn btn-default">Close</button>
-            <button ng-click="createWorkModal.create()" type="button" class="btn btn-primary">Offer feature</button>
+            <button ng-click="createWorkModal.create()" type="button" class="btn btn-primary">Create Work Package</button>
         </div>
     </form>
 </script>
+
+
 
 <script type="text/ng-template" id="createIOUMsgModal.html">
     <div class="modal-body" id="create-iou-modal-body">

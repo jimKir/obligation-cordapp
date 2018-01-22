@@ -94,6 +94,22 @@ angular.module('demoAppModule', ['ui.bootstrap', 'highcharts-ng']).controller('D
         };
 
 
+    demoApp.openCreateVendorWorkModal = () => {
+        console.log('try to pen it');
+                const createWorkModal = $uibModal.open({
+                    templateUrl: 'createVendorWorkModal.html',
+                    controller: 'CreateWorkModalCtrl',
+                    controllerAs: 'createWorkModal',
+                    resolve: {
+                        apiBaseURL: () => apiBaseURLb,
+                        peers: () => peers
+                    }
+                });
+
+                // Ignores the modal result events.
+                createWorkModal.result.then(() => {console.log('open the work modal')}, () => {console.log('open the work modal outside')});
+            };
+
     demoApp.openCreateINVModal = () => {
         console.log('try to pen it');
         const createINVModal = $uibModal.open({
