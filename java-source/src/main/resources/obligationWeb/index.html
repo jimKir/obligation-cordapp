@@ -39,7 +39,7 @@
         <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Request people from Vendor </button>
         <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Request IT Asset from Group CTO </button>
         <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Request people from HR </button>
-        <button ng-if="demoApp.isCTO(demoApp.thisNode)" ng-click="demoApp.openCreateWorkModal()" type="button" class="btn btn-primary navbar-btn">Create invoice for Services</button>
+        <button ng-if="demoApp.isCTO(demoApp.thisNode)" ng-click="demoApp.openCreatePIModal()" type="button" class="btn btn-primary navbar-btn">Create invoice for Services</button>
         <button ng-if="demoApp.isProvider(demoApp.thisNode)" ng-click="demoApp.openCreateIOUModal()" type="button" class="btn btn-primary navbar-btn">Pay invoices</button>
     </div>
 </nav>
@@ -439,8 +439,8 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>From</th>
                         <th>To</th>
+                        <th>From</th>
                         <th>Amount</th>
                         <th>Paid</th>
                         <th>Actions</th>
