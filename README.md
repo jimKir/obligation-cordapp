@@ -1,4 +1,4 @@
-![MiltonCoin]Milton Coin
+Milton Coin
 
 # Enterprise companies spend a lot of valuable resources on managing and auditing money flow within the company
 # Use of private block chain approach can help big corporations solve this.
